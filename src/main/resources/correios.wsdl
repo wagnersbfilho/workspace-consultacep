@@ -1,0 +1,101 @@
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:tns="http://cliente.bean.master.sigep.bsb.correios.com.br/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:ns1="http://schemas.xmlsoap.org/soap/http"
+                  name="AtendeClienteService"
+                  targetNamespace="http://cliente.bean.master.sigep.bsb.correios.com.br/">
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://cliente.bean.master.sigep.bsb.correios.com.br/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://cliente.bean.master.sigep.bsb.correios.com.br/">
+            <xs:element name="consultaCEP" type="tns:consultaCEP"/>
+            <xs:element name="consultaCEPResponse" type="tns:consultaCEPResponse"/>
+            <xs:element name="SQLException" type="tns:SQLException"/>
+            <xs:element name="SigepClienteException" nillable="true" type="xs:string"/>
+
+            <xs:complexType name="enderecoERP">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="bairro" type="xs:string"/>
+                    <xs:element minOccurs="0" name="cep" type="xs:string"/>
+                    <xs:element minOccurs="0" name="cidade" type="xs:string"/>
+                    <xs:element minOccurs="0" name="complemento2" type="xs:string"/>
+                    <xs:element minOccurs="0" name="end" type="xs:string"/>
+                    <xs:element minOccurs="0" name="uf" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="unidadesPostagem" nillable="true" type="tns:unidadePostagemERP"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="unidadePostagemERP">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="diretoriaRegional" type="xs:string"/>
+                    <xs:element minOccurs="0" name="endereco" type="tns:enderecoERP"/>
+                    <xs:element minOccurs="0" name="id" type="xs:string"/>
+                    <xs:element minOccurs="0" name="nome" type="xs:string"/>
+                    <xs:element minOccurs="0" name="status" type="xs:string"/>
+                    <xs:element minOccurs="0" name="tipo" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="consultaCEP">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="cep" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="consultaCEPResponse">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="return" type="tns:enderecoERP"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="SQLException">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="errorCode" type="xs:int"/>
+                    <xs:element minOccurs="0" name="sQLState" type="xs:string"/>
+                    <xs:element minOccurs="0" name="message" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+
+    <wsdl:message name="consultaCEP">
+        <wsdl:part element="tns:consultaCEP" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="consultaCEPResponse">
+        <wsdl:part element="tns:consultaCEPResponse" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="SQLException">
+        <wsdl:part element="tns:SQLException" name="SQLException"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="SigepClienteException">
+        <wsdl:part element="tns:SigepClienteException" name="SigepClienteException"> </wsdl:part>
+    </wsdl:message>
+
+    <wsdl:portType name="AtendeCliente">
+        <wsdl:operation name="consultaCEP">
+            <wsdl:input message="tns:consultaCEP" name="consultaCEP"> </wsdl:input>
+            <wsdl:output message="tns:consultaCEPResponse" name="consultaCEPResponse"> </wsdl:output>
+            <wsdl:fault message="tns:SQLException" name="SQLException"> </wsdl:fault>
+            <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException"> </wsdl:fault>
+        </wsdl:operation>
+     </wsdl:portType>
+
+    <wsdl:binding name="AtendeClienteServiceSoapBinding" type="tns:AtendeCliente">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="consultaCEP">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="consultaCEP">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="consultaCEPResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="SQLException">
+                <soap:fault name="SQLException" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="SigepClienteException">
+                <soap:fault name="SigepClienteException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="AtendeClienteService">
+        <wsdl:port binding="tns:AtendeClienteServiceSoapBinding" name="AtendeClientePort">
+            <soap:address location="https://apps.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
